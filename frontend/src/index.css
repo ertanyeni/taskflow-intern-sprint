@@ -49,6 +49,55 @@ a {
   color: var(--accent);
 }
 
+/* --- Onboarding (ilk açılış yönlendirmesi) --- */
+.onboarding {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+.onboarding h2 {
+  margin-top: 0;
+}
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  line-height: 1.45;
+}
+.steps__n {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.05rem 0.35rem;
+  border-radius: 5px;
+  background: var(--border);
+}
+
 /* --- Home module grid --- */
 .module-grid {
   display: grid;
