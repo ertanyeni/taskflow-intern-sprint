@@ -15,14 +15,17 @@ export function MealsPage() {
 
   return (
     <main>
-      <h1>Tarifler</h1>
-      <p>Dış API (TheMealDB) + cache + detay + favori + AI — gold referans modül.</p>
+      <div className="page-head">
+        <span className="kicker">MEA · 01 · gold</span>
+        <h1>Tarifler</h1>
+        <p>Dış API (TheMealDB) + cache + detay + favori + AI — aynalayacağın gold referans modül.</p>
+      </div>
 
       <MealFilters category={category} onCategoryChange={setCategory} categories={categories ?? []} />
 
-      {isPending && <p data-testid="loading">Yükleniyor…</p>}
+      {isPending && <p className="state" data-testid="loading">Tarifler yükleniyor…</p>}
       {isError && (
-        <p role="alert" data-testid="error">
+        <p className="state state--error" role="alert" data-testid="error">
           Tarifler yüklenemedi: {(error as Error).message}
         </p>
       )}

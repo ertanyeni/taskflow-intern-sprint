@@ -1,77 +1,214 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 const REPO = 'https://github.com/ertanyeni/taskflow-intern-sprint'
 
-const modules = [
-  { to: '/tasks', title: 'Görevler (TaskFlow)', desc: 'İç CRUD referansı — PostgreSQL kalıcılığı.', badge: 'referans' },
-  { to: '/meals', title: 'Tarifler (Meals)', desc: 'Dış API + cache + detay + filtre + favori + AI. Gold örnek.', badge: 'gold' },
-  { to: '/favorites', title: 'Favoriler', desc: 'Kaydettiğin dış kayıtlar (owned veri, EF).', badge: '' },
+interface Step {
+  term: string
+  gloss: string
+  detail: ReactNode
+}
+
+const steps: Step[] = [
+  {
+    term: 'Set up & run',
+    gloss: 'kur ve çalıştır',
+    detail: (
+      <>
+        <code>docker compose up -d postgres</code> → <code>dotnet run</code> → <code>npm run dev</code> ·{' '}
+        <a href={`${REPO}#hızlı-başlangıç`} target="_blank" rel="noreferrer">README</a>
+      </>
+    ),
+  },
+  {
+    term: 'Study the gold reference',
+    gloss: 'gold örneği incele',
+    detail: (
+      <>
+        <Link to="/meals">Tarifler (Meals)</Link> senin referansın — kodu oku, çalıştır, veri akışını çiz.
+      </>
+    ),
+  },
+  {
+    term: 'Read the walkthrough',
+    gloss: 'komut-komut rehber',
+    detail: (
+      <>
+        Meals'ı adım adım nasıl kurduğumuz —{' '}
+        <a href={`${REPO}/blob/main/docs/reference-meals.md`} target="_blank" rel="noreferrer">
+          docs/reference-meals.md
+        </a>
+      </>
+    ),
+  },
+  {
+    term: 'Claim your task',
+    gloss: 'görevini al',
+    detail: (
+      <>
+        <a href={`${REPO}/issues`} target="_blank" rel="noreferrer">GitHub Issues</a> → Stajyer 1:{' '}
+        <code>S1-1</code>, Stajyer 2: <code>S2-1</code> (rung'ları sırayla).
+      </>
+    ),
+  },
+  {
+    term: 'Branch off',
+    gloss: 'branch aç',
+    detail: (
+      <>
+        <code>feat/&lt;intern&gt;/&lt;rung&gt;-&lt;slug&gt;</code> · no direct push to main{' '}
+        <em>(main'e direkt push yok)</em>.
+      </>
+    ),
+  },
+  {
+    term: 'Open a small PR',
+    gloss: 'küçük PR aç',
+    detail: <>issue'yu kapat → green CI → mentor review → merge.</>,
+  },
+  {
+    term: 'The golden rule',
+    gloss: 'altın kural',
+    detail: (
+      <>
+        Anlamadığın kodu merge etme. AI'ı senior partner gibi kullan (plan + review), tek seferde tam dosya
+        yazdırma. ·{' '}
+        <a href={`${REPO}/blob/main/docs/curriculum.md`} target="_blank" rel="noreferrer">müfredat</a>
+      </>
+    ),
+  },
 ]
+
+interface Entry {
+  call: string
+  title: string
+  desc: string
+  tags: string[]
+  to?: string
+  stamp: { label: string; kind: 'gold' | 'ref' | 'yours' | 'owned' }
+}
+
+const collection: Entry[] = [
+  {
+    call: 'TSK · 00',
+    title: 'Görevler',
+    desc: 'İç CRUD iskeleti — bir kaydın uçtan uca PostgreSQL yolculuğu.',
+    tags: ['owned', 'EF Core', 'CRUD'],
+    to: '/tasks',
+    stamp: { label: 'referans', kind: 'ref' },
+  },
+  {
+    call: 'MEA · 01',
+    title: 'Tarifler',
+    desc: 'Dış API + cache + detay + filtre + favori + AI. Aynalayacağın gold örnek.',
+    tags: ['dış API', 'cache', 'EF', 'AI'],
+    to: '/meals',
+    stamp: { label: 'gold', kind: 'gold' },
+  },
+  {
+    call: 'FAV · 02',
+    title: 'Favoriler',
+    desc: 'Kaydettiğin dış kayıtlar — bize ait veri, EF Core ile kalıcı.',
+    tags: ['owned', 'EF Core'],
+    to: '/favorites',
+    stamp: { label: 'owned', kind: 'owned' },
+  },
+  {
+    call: 'POK · 03',
+    title: 'Pokédex',
+    desc: 'Stajyer 1 modülü — PokeAPI üzerinden kendi explorer’ını kur.',
+    tags: ['PokeAPI', 'Stajyer 1', 'açık'],
+    stamp: { label: 'senin', kind: 'yours' },
+  },
+  {
+    call: 'LIB · 04',
+    title: 'Kütüphane',
+    desc: 'Stajyer 2 modülü — Open Library üzerinden kitap keşif modülünü kur.',
+    tags: ['Open Library', 'Stajyer 2', 'açık'],
+    stamp: { label: 'senin', kind: 'yours' },
+  },
+]
+
+function EntryRow({ entry }: { entry: Entry }) {
+  const inner = (
+    <>
+      <span className="entry__call">{entry.call}</span>
+      <span className="entry__main">
+        <span className="entry__title">{entry.title}</span>
+        <span className="entry__desc">{entry.desc}</span>
+        <span className="entry__tags">
+          {entry.tags.map((t) => (
+            <span key={t}>{t}</span>
+          ))}
+        </span>
+      </span>
+      <span className={`stamp stamp--${entry.stamp.kind === 'owned' ? 'ref' : entry.stamp.kind}`}>
+        {entry.stamp.label}
+      </span>
+    </>
+  )
+
+  return entry.to ? (
+    <Link to={entry.to} className="entry">
+      {inner}
+    </Link>
+  ) : (
+    <div className="entry entry--locked">{inner}</div>
+  )
+}
 
 export function HomePage() {
   return (
     <main>
-      <h1>Modüler Keşif Paneli</h1>
-      <p>
-        Her modül aynı mimariyi aynalar: React → ASP.NET Core → (dış API / EF Core) → PostgreSQL.
-        Stajyerler bu paterni aynalayarak kendi modüllerini kurar.
-      </p>
+      <div className="masthead">
+        <span className="kicker rise rise-1">AI Senior Partner · Full-Stack Sprint</span>
+        <h1 className="masthead__title rise rise-2">Keşif Kütüphanesi</h1>
+        <p className="masthead__lede rise rise-3">
+          Her modül aynı dikey kesiti aynalar: React → ASP.NET Core → (dış API / EF Core) → PostgreSQL.
+          Buradaki koleksiyonu okuyup aynalayarak kendi modülünü kuruyorsun.
+        </p>
+        <div className="masthead__meta rise rise-4">
+          <span><b>5</b> modül</span>
+          <span><b>3</b> hazır</span>
+          <span><b>2</b> açık</span>
+          <span><b>main</b> korumalı</span>
+        </div>
+      </div>
 
-      {/* İlk açılışta stajyeri karşılayan, satır satır yönlendirme */}
-      <section className="onboarding">
-        <h2>Buradan başla 👇</h2>
-        <ol className="steps">
-          <li>
-            <span className="steps__n">1</span>
-            <span><b>Kur & çalıştır:</b> <code>docker compose up -d postgres</code> → backend <code>dotnet run</code> → frontend <code>npm run dev</code> · <a href={`${REPO}#hızlı-başlangıç`} target="_blank" rel="noreferrer">README</a></span>
-          </li>
-          <li>
-            <span className="steps__n">2</span>
-            <span><b>Gold örneği incele:</b> <Link to="/meals">Tarifler (Meals)</Link> senin referansın — kodu oku, çalıştır, veri akışını çiz.</span>
-          </li>
-          <li>
-            <span className="steps__n">3</span>
-            <span><b>Komut-komut rehber:</b> Meals'ı nasıl kurduğumuz — <a href={`${REPO}/blob/main/docs/reference-meals.md`} target="_blank" rel="noreferrer">docs/reference-meals.md</a></span>
-          </li>
-          <li>
-            <span className="steps__n">4</span>
-            <span><b>Görevini al:</b> <a href={`${REPO}/issues`} target="_blank" rel="noreferrer">GitHub Issues</a> → Stajyer 1: <code>S1-1</code>, Stajyer 2: <code>S2-1</code> (rung'ları sırayla).</span>
-          </li>
-          <li>
-            <span className="steps__n">5</span>
-            <span><b>Branch aç:</b> <code>feat/&lt;stajyer&gt;/&lt;rung&gt;-&lt;slug&gt;</code> · <b>main'e direkt push YOK.</b></span>
-          </li>
-          <li>
-            <span className="steps__n">6</span>
-            <span><b>Küçük PR:</b> issue'yu kapat → CI yeşil → mentor review → merge.</span>
-          </li>
-          <li>
-            <span className="steps__n">7</span>
-            <span><b>Altın kural:</b> Anlamadığın kodu merge etme; AI'ı senior partner gibi kullan (plan + review), tek seferde tam dosya yazdırma. · <a href={`${REPO}/blob/main/docs/curriculum.md`} target="_blank" rel="noreferrer">müfredat</a></span>
-          </li>
+      <section className="section">
+        <div className="section__head">
+          <span className="section__num">§1</span>
+          <h2 className="section__title">Buradan başla</h2>
+          <span className="section__note">ilk gün · sırayla</span>
+        </div>
+        <ol className="start stagger">
+          {steps.map((step, i) => (
+            <li className="start__item" key={step.term}>
+              <span className="start__index">{String(i + 1).padStart(2, '0')}</span>
+              <span className="start__body">
+                <span>
+                  <span className="start__term">{step.term}</span>{' '}
+                  <span className="start__gloss">({step.gloss})</span>
+                </span>
+                <span className="start__detail">{step.detail}</span>
+              </span>
+            </li>
+          ))}
         </ol>
       </section>
 
-      <h2>Modüller</h2>
-      <div className="module-grid">
-        {modules.map((m) => (
-          <Link key={m.to} to={m.to} className="module-card">
-            <div className="module-card__head">
-              <strong>{m.title}</strong>
-              {m.badge && <span className={`badge badge--${m.badge}`}>{m.badge}</span>}
-            </div>
-            <p>{m.desc}</p>
-          </Link>
-        ))}
-
-        <div className="module-card module-card--todo">
-          <div className="module-card__head">
-            <strong>Pokédex / Kütüphane</strong>
-            <span className="badge badge--todo">stajyer</span>
-          </div>
-          <p>Stajyer 1 (PokeAPI) ve Stajyer 2 (Open Library) modülleri buraya gelecek.</p>
+      <section className="section">
+        <div className="section__head">
+          <span className="section__num">§2</span>
+          <h2 className="section__title">Koleksiyon</h2>
+          <span className="section__note">gold örneği aynala → kendi modülünü kur</span>
         </div>
-      </div>
+        <div className="catalog stagger">
+          {collection.map((entry) => (
+            <EntryRow key={entry.call} entry={entry} />
+          ))}
+        </div>
+      </section>
     </main>
   )
 }

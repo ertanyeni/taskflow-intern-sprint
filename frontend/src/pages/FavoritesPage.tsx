@@ -7,18 +7,23 @@ export function FavoritesPage() {
 
   return (
     <main>
-      <h1>Favoriler</h1>
-      <p>Kaydedilen tarifler (owned veri — PostgreSQL'de EF Core ile saklanır).</p>
+      <div className="page-head">
+        <span className="kicker">FAV · 02 · owned</span>
+        <h1>Favoriler</h1>
+        <p>Kaydedilen tarifler — bize ait veri, PostgreSQL'de EF Core ile saklanır.</p>
+      </div>
 
-      {isPending && <p data-testid="loading">Yükleniyor…</p>}
-      {isError && <p role="alert">Favoriler yüklenemedi.</p>}
+      {isPending && <p className="state" data-testid="loading">Yükleniyor…</p>}
+      {isError && <p className="state state--error" role="alert">Favoriler yüklenemedi.</p>}
 
       {favorites && favorites.length === 0 && (
-        <p data-testid="empty-state">Henüz favori yok. Bir tarifin detayında “Favorile”ye bas.</p>
+        <p className="state" data-testid="empty-state">
+          Henüz favori yok. Bir tarifin detayında “Favorile”ye bas, burada belirsin.
+        </p>
       )}
 
       {favorites && favorites.length > 0 && (
-        <ul>
+        <ul className="favorites-list">
           {favorites.map((fav) => (
             <li key={fav.id} className="favorite-row">
               <Link to={`/meals/${fav.externalId}`}>{fav.title}</Link>

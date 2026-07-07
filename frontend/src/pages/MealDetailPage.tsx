@@ -10,7 +10,7 @@ export function MealDetailPage() {
   if (isPending) {
     return (
       <main>
-        <p data-testid="loading">Yükleniyor…</p>
+        <p className="state" data-testid="loading">Tarif yükleniyor…</p>
       </main>
     )
   }
@@ -18,16 +18,18 @@ export function MealDetailPage() {
   if (isError || !meal) {
     return (
       <main>
-        <p role="alert">Tarif bulunamadı{error ? `: ${(error as Error).message}` : ''}.</p>
-        <Link to="/meals">← Tariflere dön</Link>
+        <p className="state state--error" role="alert">
+          Tarif bulunamadı{error ? `: ${(error as Error).message}` : ''}.
+        </p>
+        <Link to="/meals" className="backlink">← Tariflere dön</Link>
       </main>
     )
   }
 
   return (
     <main>
-      <Link to="/meals">← Tariflere dön</Link>
-      <h1>{meal.name}</h1>
+      <Link to="/meals" className="backlink">← Tariflere dön</Link>
+      <h1 style={{ marginTop: 'var(--space-sm)' }}>{meal.name}</h1>
       <p className="meal-card__meta">
         {meal.category}
         {meal.area ? ` · ${meal.area}` : ''}
@@ -48,7 +50,7 @@ export function MealDetailPage() {
           (S1-2: IngredientCount, S2-2: HasVideo/InstructionWordCount). */}
 
       <h2>Malzemeler</h2>
-      <ul>
+      <ul className="content-list">
         {meal.ingredients.map((ingredient) => (
           <li key={ingredient}>{ingredient}</li>
         ))}

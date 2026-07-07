@@ -6,13 +6,16 @@ export function TaskListPage() {
 
   return (
     <main>
-      <h1>TaskFlow</h1>
-      <p>Küçük ekipler için görev takip uygulaması — MVP iskeleti.</p>
+      <div className="page-head">
+        <span className="kicker">TSK · 00 · referans</span>
+        <h1>Görevler</h1>
+        <p>İç CRUD iskeleti — bir kaydın uçtan uca PostgreSQL yolculuğu.</p>
+      </div>
 
-      {isPending && <p data-testid="loading">Yükleniyor…</p>}
+      {isPending && <p className="state" data-testid="loading">Yükleniyor…</p>}
 
       {isError && (
-        <p role="alert" data-testid="error">
+        <p className="state state--error" role="alert" data-testid="error">
           Task listesi yüklenemedi: {error.message}
         </p>
       )}

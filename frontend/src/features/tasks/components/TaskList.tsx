@@ -7,14 +7,14 @@ interface TaskListProps {
 export function TaskList({ tasks }: TaskListProps) {
   if (tasks.length === 0) {
     return (
-      <p data-testid="empty-state">
+      <p className="state" data-testid="empty-state">
         Henüz task yok. Task oluşturma (CreateTaskForm) Gün 5 referans modülünde eklenecek.
       </p>
     )
   }
 
   return (
-    <ul>
+    <ul className="content-list">
       {tasks.map((task) => (
         <li key={task.id}>
           <strong>{task.title}</strong> — {task.status}
