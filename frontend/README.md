@@ -35,21 +35,23 @@ Tarayıcıda terminalin verdiği local URL'yi açın.
 ```text
 frontend/
 ├─ src/
-│  ├─ app/                    # Router, provider, uygulama girişi
-│  ├─ pages/                  # Sayfalar
+│  ├─ app/                    # BrowserRouter altında NavBar + Routes
+│  ├─ pages/                  # HomePage, TaskListPage, MealsPage, MealDetailPage, FavoritesPage
 │  ├─ features/
-│  │  └─ tasks/
-│  │     ├─ api/              # tasksClient
-│  │     ├─ components/       # feature componentleri
-│  │     ├─ hooks/            # query/mutation hook'ları
-│  │     ├─ types.ts
-│  │     └─ taskKeys.ts
-│  ├─ shared/
-│  │  ├─ components/          # generic UI parçaları
-│  │  └─ lib/                 # fetch client vb.
+│  │  ├─ tasks/               # iç CRUD iskeleti
+│  │  ├─ meals/               # GOLD referans: api/hooks/components/types/keys
+│  │  ├─ pokedex/             # Stajyer 1 (açık)
+│  │  └─ library/             # Stajyer 2 (açık)
+│  ├─ shared/lib/apiClient.ts # apiGet / apiPost / apiDelete — tek HTTP kapısı
 │  └─ main.tsx
 └─ README.md
 ```
+
+## Routing ve modüller
+`react-router-dom` v6. Rotalar: `/`, `/tasks`, `/meals`, `/meals/:id`, `/favorites`.
+Stajyerler `/pokedex` ve `/library` rotalarını ekler. Gold `features/meals/` modülü
+(query + mutation + detail + favori + AI paneli) aynalanacak referanstır — bkz.
+[`../docs/reference-meals.md`](../docs/reference-meals.md).
 
 ## State ayrımı
 

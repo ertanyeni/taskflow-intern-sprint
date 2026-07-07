@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>TaskFlow</RootNamespace>
     <AssemblyName>TaskFlow.Api</AssemblyName>
+    <!-- Groq API key gibi secret'ları repoya sokmadan local'de saklamak için:
+         dotnet user-secrets set "Groq:ApiKey" "gsk_..." -->
+    <UserSecretsId>taskflow-intern-sprint</UserSecretsId>
   </PropertyGroup>
 
   <!-- Tests/ ayrı bir proje; bu API projesi onu derlemeye çalışmamalı. -->

@@ -75,6 +75,26 @@ backend/
 | PATCH | `/api/tasks/{id}/status` | Task durumunu değiştir |
 | DELETE | `/api/tasks/{id}` | Task sil |
 
+### Meals gold modülü + Favorites (referans)
+
+| Method | Route | Görev |
+|---|---|---|
+| GET | `/api/meals?search=&category=` | Tarif listesi (dış API + cache) |
+| GET | `/api/meals/categories` | Kategori listesi (filtre kaynağı) |
+| GET | `/api/meals/{id}` | Tarif detayı |
+| POST | `/api/meals/{id}/ai-summary` | AI özet/etiket (Groq) |
+| GET/POST/DELETE | `/api/favorites` | Favori CRUD (owned, EF) |
+
+Desen: dış API → **typed `HttpClient`** (`IMealDbClient`) → **`IMemoryCache`** → application service → contract.
+Dış veri Domain entity DEĞİL (read-model); sadece favori owned entity + migration.
+Komut-komut kurulum: [`../docs/reference-meals.md`](../docs/reference-meals.md).
+
+### AI (Groq) key
+```bash
+dotnet user-secrets set "Groq:ApiKey" "gsk_..."   # repoya girmez
+```
+Key yoksa AI endpoint'i `503` döner (crash yok). Testler `FakeAiService` kullanır → CI'da key gerekmez.
+
 ## AI reference → student mirror modeli
 
 ### Reference: AI üretir

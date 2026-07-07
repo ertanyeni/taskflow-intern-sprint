@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Api.Endpoints;
 using TaskFlow.Api.Middleware;
+using TaskFlow.Application.Ai;
+using TaskFlow.Application.Favorites;
+using TaskFlow.Application.Meals;
 using TaskFlow.Application.Tasks;
+using TaskFlow.Infrastructure.External.Groq;
+using TaskFlow.Infrastructure.External.MealDb;
 using TaskFlow.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +25,29 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
+// --- Cache (dış API sonuçlarını tutmak için) ---
+builder.Services.AddMemoryCache();
+
+// --- Meals modülü (gold referans): dış API typed HttpClient + application service ---
+builder.Services.AddHttpClient<IMealDbClient, MealDbClient>(client =>
+{
+    client.BaseAddress = new Uri("https://www.themealdb.com/api/json/v1/1/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
+
+// --- Groq AI (OpenAI-uyumlu). Key server-side; user-secrets/env'den okunur. ---
+builder.Services.Configure<GroqOptions>(builder.Configuration.GetSection(GroqOptions.SectionName));
+builder.Services.AddHttpClient<IAiService, GroqAiService>((sp, client) =>
+{
+    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<GroqOptions>>().Value;
+    client.BaseAddress = new Uri(options.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
 // --- Application services ---
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 // --- Swagger (sadece Development) ---
 builder.Services.AddEndpointsApiExplorer();
@@ -42,6 +68,8 @@ app.UseCors(CorsPolicy);
 
 app.MapHealthEndpoints();
 app.MapTaskEndpoints();
+app.MapMealEndpoints();
+app.MapFavoriteEndpoints();
 
 app.Run();
 
