@@ -92,10 +92,10 @@ const collection: Entry[] = [
   {
     call: 'TSK · 00',
     title: 'Görevler',
-    desc: 'İç CRUD iskeleti — bir kaydın uçtan uca PostgreSQL yolculuğu.',
-    tags: ['owned', 'EF Core', 'CRUD'],
+    desc: 'Basit iç görev listesi (owned veri, EF Core). Stajyer 2 rung 1-2’de burada ısınır.',
+    tags: ['owned', 'EF Core', 'Stajyer 2'],
     to: '/tasks',
-    stamp: { label: 'referans', kind: 'ref' },
+    stamp: { label: 'ısınma', kind: 'ref' },
   },
   {
     call: 'MEA · 01',

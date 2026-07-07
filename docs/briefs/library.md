@@ -6,8 +6,8 @@
 ## Rung planı (sırayla, her biri 1 issue → 1 PR)
 | Issue | Rung | İş |
 |---|---|---|
-| S2-1 | 1 | `MealsPage`'e A-Z / Z-A sıralama + "N sonuç" sayacı (var olan sayfayı editle) |
-| S2-2 | 2 | Meal detayına `HasVideo` + `InstructionWordCount` (service→DTO→UI→test) |
+| S2-1 | 1 | **Görevler (Tasks)** listesine durum filtresi + "N sonuç" sayacı (var olan sayfayı editle) |
+| S2-2 | 2 | **Görev'e** `AgeDays` türetilmiş alan — `TaskService`→`TaskResponse`→`TaskList`→test |
 | S2-3 | 3 | **Kütüphane read-only modülü**: `IOpenLibraryClient` (User-Agent!) + `GET /api/books` + `LibraryPage` |
 | S2-4 | 4 | Kitap detay + dil/yıl filtresi + "Okuma Listem" (`SavedBook` + `ReadingStatus` enum + migration) |
 | S2-5 | 5 | `POST /api/books/{id}/ai-summary` (Groq) + detay AI paneli |

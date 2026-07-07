@@ -66,6 +66,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(CorsPolicy);
 
+// Development'ta /tasks boş görünmesin diye demo veri ekle (idempotent).
+if (app.Environment.IsDevelopment())
+{
+    try
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await DbSeeder.SeedDevelopmentAsync(db);
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex, "Demo veri seed'i atlandı (DB migrate edildi mi?).");
+    }
+}
+
 app.MapHealthEndpoints();
 app.MapTaskEndpoints();
 app.MapMealEndpoints();

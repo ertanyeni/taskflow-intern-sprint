@@ -21,16 +21,16 @@ Bu proje **Modüler Keşif Paneli**. Her modül aynı dikey kesiti aynalar:
 
 ## Rung'lar ve gold referans eşlemesi
 
-### rung-1 (Aşama 1) — var olan Meals sayfasını editle
-- **S1-1:** `MealsPage`'e debounce'lu **arama** input'u + **"N sonuç"** sayacı ekle. Backend zaten `GET /api/meals?search=` destekliyor.
-- **S2-1:** `MealsPage`'e **A-Z / Z-A sıralama** düğmesi + **"N sonuç"** sayacı ekle (client-side).
-- Referans paterni: `features/meals/components/MealFilters.tsx` (kategori filtresi) + `MealsPage.tsx`.
-- ⚠️ İkisi de aynı dosyalara dokunur → **sıralı merge/rebase** (S1-1 önce, S2-1 rebase).
+### rung-1 (Aşama 1) — var olan bir liste sayfasını editle (farklı sayfalar!)
+- **S1-1 (Meals):** `MealsPage`'e debounce'lu **arama** + **"N sonuç"** sayacı. Backend zaten `GET /api/meals?search=` destekliyor.
+- **S2-1 (Tasks):** **Görevler** listesine **durum filtresi** + **"N sonuç"** sayacı (client-side). `/tasks` demo görevle seed'li.
+- Referans paterni (ikisi de): `features/meals/components/MealFilters.tsx` (kategori filtresi).
+- ✅ Farklı sayfalar (Meals ≠ Tasks) → **ortak dosya yok, çakışma yok, paralel çalışırlar.**
 
-### rung-2 (Aşama 1) — Meal detayına türetilmiş alan (katmanlar arası)
-- **S1-2:** `IngredientCount` (malzeme sayısı). **S2-2:** `HasVideo` + `InstructionWordCount`.
-- Zincir: `MealService` (türet) → `MealDetailResponse` (alan) → `MealDetailPage` (göster) → `MealsEndpointTests` (assert).
-- Referans: `Application/Meals/MealService.cs`, `Api/Contracts/MealResponses.cs`.
+### rung-2 (Aşama 1) — türetilmiş alan (katmanlar arası, service→DTO→UI→test)
+- **S1-2 (Meals):** `IngredientCount` — `MealService` → `MealDetailResponse` → `MealDetailPage` → `MealsEndpointTests`.
+- **S2-2 (Tasks):** `AgeDays` ("kaç gün önce") — `TaskService` → `TaskResponse` → `TaskList` → `TasksEndpointTests`.
+- Aynı beceri, **farklı modül** → çakışma yok.
 
 ### rung-3 (Aşama 2) — kendi read-only modülün
 - **S1-3:** Pokédex. **S2-3:** Kütüphane.
