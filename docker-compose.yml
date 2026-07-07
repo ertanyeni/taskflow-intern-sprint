@@ -1,0 +1,25 @@
+# Local geliştirme ortamı.
+# Sadece PostgreSQL container olarak çalışır; backend ve frontend local'de çalıştırılır.
+#   docker compose up -d postgres
+services:
+  postgres:
+    image: postgres:16
+    container_name: taskflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taskflow
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow
+    # Varsayılan 5432. Makinende 5432 doluysa:  POSTGRES_PORT=5442 docker compose up -d postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - taskflow-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskflow -d taskflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  taskflow-pgdata:

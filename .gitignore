@@ -1,0 +1,28 @@
+# --- .NET ---
+bin/
+obj/
+*.user
+
+# --- Node / frontend ---
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# --- Playwright / araç çıktıları ---
+.playwright-mcp/
+
+# --- Environment / secrets (ASLA commit edilmez) ---
+.env
+.env.*
+!.env.example
+
+# --- IDE / OS ---
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+
+# --- Claude Code local ayarları ---
+.claude/settings.local.json
