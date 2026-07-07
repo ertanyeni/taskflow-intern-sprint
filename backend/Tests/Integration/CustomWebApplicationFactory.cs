@@ -36,15 +36,26 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         });
     }
 
+    // Migration process başına BİR KEZ çalışır. xUnit test sınıflarını paralel koşturur;
+    // iki factory instance'ı aynı anda Migrate() çağırırsa taze DB'de CREATE'ler çakışır
+    // (Postgres 23505 pg_type). Statik kilit + bayrak bunu serileştirir.
+    private static readonly object MigrateLock = new();
+    private static bool _migrated;
+
     // Host kurulunca şemayı garanti et: favori testleri gerçek Postgres'e yazar.
-    // Böylece CI'daki taze postgres service container'ı da otomatik migrate olur
-    // (ayrı bir "dotnet ef database update" adımı gerekmez).
+    // Böylece CI'daki taze postgres service container'ı da otomatik migrate olur.
     protected override IHost CreateHost(IHostBuilder builder)
     {
         var host = base.CreateHost(builder);
-        using var scope = host.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate();
+        lock (MigrateLock)
+        {
+            if (!_migrated)
+            {
+                using var scope = host.Services.CreateScope();
+                scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+                _migrated = true;
+            }
+        }
         return host;
     }
 }
