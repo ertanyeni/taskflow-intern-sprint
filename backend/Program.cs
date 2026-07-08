@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TaskFlow.Api.Endpoints;
 using TaskFlow.Api.Middleware;
 using TaskFlow.Application.Ai;
@@ -27,7 +28,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // --- Cache (dış API sonuçlarını tutmak için) ---
 builder.Services.AddMemoryCache();
-
+builder.Services.AddHttpClient<IMealDbClient, MealDbClient>(client =>
+{
+    client.BaseAddress = new Uri("https://www.themealdb.com/api/json/v1/1/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 // --- Meals modülü (gold referans): dış API typed HttpClient + application service ---
 builder.Services.AddHttpClient<IMealDbClient, MealDbClient>(client =>
 {
@@ -37,6 +42,12 @@ builder.Services.AddHttpClient<IMealDbClient, MealDbClient>(client =>
 
 // --- Groq AI (OpenAI-uyumlu). Key server-side; user-secrets/env'den okunur. ---
 builder.Services.Configure<GroqOptions>(builder.Configuration.GetSection(GroqOptions.SectionName));
+builder.Services.AddHttpClient<IAiService, GroqAiService>((sp, client) =>
+{
+    var o = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
+    client.BaseAddress = new Uri(o.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 builder.Services.AddHttpClient<IAiService, GroqAiService>((sp, client) =>
 {
     var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<GroqOptions>>().Value;
