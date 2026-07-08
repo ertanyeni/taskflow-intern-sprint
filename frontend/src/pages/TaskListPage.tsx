@@ -1,9 +1,14 @@
 import { useTasks } from '../features/tasks/hooks/useTasks'
 import { TaskList } from '../features/tasks/components/TaskList'
-
+import { useState } from 'react'
 export function TaskListPage() {
+  const [status, setStatus] = useState('')
   const { data, isPending, isError, error } = useTasks()
-
+  const visible = data
+  ? status
+    ? data.filter((t) => t.status === status)
+    : data
+  : []
   return (
     <main>
       <div className="page-head">
@@ -14,7 +19,16 @@ export function TaskListPage() {
           durum filtresi + sayaç, sonra türetilmiş bir alan.
         </p>
       </div>
-
+<select
+  value={status}
+  onChange={(event) => setStatus(event.target.value)}
+>
+  <option value="">Hepsi</option>
+  <option value="Todo">Todo</option>
+  <option value="InProgress">InProgress</option>
+  <option value="Done">Done</option>
+</select>
+<span>{visible.length} sonuç</span>
       {isPending && <p className="state" data-testid="loading">Yükleniyor…</p>}
 
       {isError && (
@@ -23,7 +37,7 @@ export function TaskListPage() {
         </p>
       )}
 
-      {data && <TaskList tasks={data} />}
+     {data && <TaskList tasks={visible} />}
     </main>
   )
 }
